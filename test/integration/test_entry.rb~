@@ -41,7 +41,7 @@ class TestEntry < Test::Unit::TestCase
         @entry_class.strategy = lambda do |context, attributes|
             attributes = [attributes[0..2], attributes[3..5]]
             context.attributes.each_with_index do |attribute, i|
-                context.send "#{attribute}=", attributes[i]
+                context.send attribute.to_s + "=", attributes[i]
             end
         end
         entry = @entry_class.new("1st2nd")
