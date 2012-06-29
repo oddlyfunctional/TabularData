@@ -5,7 +5,7 @@ module TabularData
             def call(context, attributes)
                 attributes = separate_attributes(attributes)
                 context.attributes.each_with_index do |attribute, i|
-				    context.send "#{attribute}=", attributes[i]
+				    context.send(attribute.to_s + "=", attributes[i])
 			    end
             end
             
