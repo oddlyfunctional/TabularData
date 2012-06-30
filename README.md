@@ -21,9 +21,10 @@ Or install it yourself as:
 
 ```ruby
 class Person
-    attr_accessor :name, :age
-    
+
     ATTRIBUTES = [:name, :age]
+    
+    attr_accessor *ATTRIBUTES
 end
 
 reader = TabularData::Reader.new(Person::ATTRIBUTES)
@@ -79,9 +80,9 @@ person.age
 ### Useful methods
 
 ```ruby
-people = TabularData.parse_csv("people_data.csv", Person::ATTRIBUTES, lambda{ Person.new })
+people = TabularData.parse_csv("people_data.csv", Person::ATTRIBUTES, Person.method(:new))
 
-people = TabularData.parse_lines("Marcos;23\nFelipe;25", Person::ATTRIBUTES, lambda{ Person.new })
+people = TabularData.parse_lines("Marcos;23\nFelipe;25", Person::ATTRIBUTES, Person.method(:new))
 ```
 
 ## Contributing
