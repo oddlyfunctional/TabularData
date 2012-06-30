@@ -49,4 +49,32 @@ class TestEntry < Test::Unit::TestCase
         assert_equal "1st", @entry.a
         assert_equal "2nd", @entry.b
     end
+    
+    def test_parse_lines
+        entries = TabularData.parse_lines("first;second\n1st;2nd",
+                                           Entry::ATTRIBUTES,
+                                           lambda{ Entry.new })
+        assert_equal "first", entries[0].a
+        assert_equal "second", entries[0].b
+        assert_equal "1st", entries[1].a
+        assert_equal "2nd", entries[1].b
+    end
+    
+    def test_parse_csv
+        require 'fileutils'
+        FileUtils.mkdir("temp") unless File.exists?("temp")
+        File.open("temp/entries.csv", "w") do |f|
+            f << "first;second\n1st;2nd"
+        end
+        
+        entries = TabularData.parse_csv("temp/entries.csv",
+                                         Entry::ATTRIBUTES,
+                                         lambda { Entry.new })
+        assert_equal "first", entries[0].a
+        assert_equal "second", entries[0].b
+        assert_equal "1st", entries[1].a
+        assert_equal "2nd", entries[1].b
+        
+        FileUtils.rm_rf("temp")
+    end
 end
