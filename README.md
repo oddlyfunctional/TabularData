@@ -2,18 +2,32 @@
 
 A library for parsing tabular data.
 
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'tabular_data'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install tabular_data
+
 ## Usage
 
+
 ```ruby
-class Person < TabularData::Entry
+class Person
     attr_accessor :name, :age
     
-    def attributes
-        [:name, :age]
-    end
+    ATTRIBUTES = [:name, :age]
 end
 
-person = Person.new("Marcos;23")
+reader = TabularData::Reader.new(Person::ATTRIBUTES)
+person = reader.read(Person.new, "Marcos;23")
 
 person.name
 => "Marcos"
@@ -25,8 +39,8 @@ person.age
 ### Changing strategies
 
 ```ruby
-Person.strategy = :array
-person = Person.new(["Marcos", 23])
+reader.strategy = :array
+person = reader.read(Person.new, ["Marcos", 23])
 
 person.name
 => "Marcos"
@@ -36,9 +50,9 @@ person.age
 
 custom_csv = TabularData::Strategies::CSVStrategy.new
 custom_csv.column_delimiter = "|"
-Person.strategy = custom_csv
+reader.strategy = custom_csv
 
-person = Person.new("Marcos|23")
+person = reader.read(Person.new, "Marcos|23")
 
 person.name
 => "Marcos"
@@ -46,14 +60,14 @@ person.name
 person.age
 => "23"
 
-Person.strategy = lambda do |context, attributes|
-    attributes = [attributes[0..3], attributes[4..5]]
-    context.attributes.each_with_index do |attribute, i|
-        context.send "#{attribute}=", attributes[i]
+reader.strategy = lambda do |context, attributes_to_parse, attributes|
+    attributes_to_parse = [attributes[0..3], attributes_to_parse[4..5]]
+    attributes.each_with_index do |attribute, i|
+        context.send "#{attribute}=", attributes_to_parse[i]
     end
 end
 
-person = Person.new("Marc23")
+person = reader.read(Person.new, "Marc23")
 
 person.name
 => "Marc"
@@ -61,3 +75,19 @@ person.name
 person.age
 => "23"
 ```
+
+### Useful methods
+
+```ruby
+people = TabularData.parse_csv("people_data.csv", Person::ATTRIBUTES, lambda{ Person.new })
+
+people = TabularData.parse_lines("Marcos;23\nFelipe;25", Person::ATTRIBUTES, lambda{ Person.new })
+```
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Added some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
