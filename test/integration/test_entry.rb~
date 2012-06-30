@@ -42,7 +42,7 @@ class TestEntry < Test::Unit::TestCase
         @reader.strategy = lambda do |context, attributes_to_parse, attributes|
             attributes_to_parse = [attributes_to_parse[0..2], attributes_to_parse[3..5]]
             attributes.each_with_index do |attribute, i|
-                context.send "#{attribute}=", attributes_to_parse[i]
+                context.send "#{attribute}=", attributes[i]
             end
         end
         @reader.read(@entry, "1st2nd")
