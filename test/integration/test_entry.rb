@@ -75,6 +75,6 @@ class TestEntry < Test::Unit::TestCase
         assert_equal "1st", entries[1].a
         assert_equal "2nd", entries[1].b
         
-        FileUtils.rmdir("temp")
+        FileUtils.rm_rf("temp")
     end
 end
