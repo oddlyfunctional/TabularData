@@ -77,4 +77,10 @@ class TestEntry < Test::Unit::TestCase
         
         FileUtils.rm_rf("temp")
     end
+    
+    def test_default_strategy
+        @reader.read(@entry, "first;second")
+        assert_equal "first", @entry.a
+        assert_equal "second", @entry.b   
+    end
 end

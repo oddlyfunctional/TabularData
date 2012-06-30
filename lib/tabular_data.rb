@@ -80,7 +80,7 @@ module TabularData
         end
         
         def read(entry, attributes_to_parse)
-            @strategy.call(entry, attributes_to_parse, @attributes)
+            strategy.call(entry, attributes_to_parse, @attributes)
             entry
         end
 
