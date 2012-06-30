@@ -5,7 +5,7 @@ module TabularData
             def call(context, attributes_to_parse, attributes)
                 attributes_to_parse = parse_attributes(attributes_to_parse)
                 attributes.each_with_index do |attribute, i|
-				    context.send "#{attribute}=", attributes_to_parse[i]
+				    context.send "#{attribute}=", attributes[i]
 			    end
             end
             
