@@ -18,7 +18,6 @@ Or install it yourself as:
 
 ## Usage
 
-
 ```ruby
 class Person
 
@@ -35,6 +34,19 @@ person.name
 
 person.age
 => "23"
+
+person = reader.read(Person.new, "Marcos;23") do |attribute, value|
+    return case attribute
+    when :name then value.upcase
+    when :age then value.to_i
+    end
+end
+
+person.name
+=> "MARCOS"
+
+person.age
+=> 23
 ```
 
 ### Changing strategies

@@ -20,10 +20,11 @@ module TabularData
     module Strategies
         class ReaderStrategy
 
-            def call(context, attributes_to_parse, attributes)
+            def call(context, attributes_to_parse, attributes, &block)
+                block = lambda{ |attribute, value| value } unless block_given?
                 attributes_to_parse = parse_attributes(attributes_to_parse)
                 attributes.each_with_index do |attribute, i|
-				    context.send "#{attribute}=", attributes_to_parse[i]
+				    context.send "#{attribute}=", block.call(attribute, attributes_to_parse[i])
 			    end
             end
             
@@ -79,8 +80,8 @@ module TabularData
 	        @attributes = attributes
         end
         
-        def read(entry, attributes_to_parse)
-            strategy.call(entry, attributes_to_parse, @attributes)
+        def read(entry, attributes_to_parse, &block)
+            strategy.call(entry, attributes_to_parse, @attributes, &block)
             entry
         end
 

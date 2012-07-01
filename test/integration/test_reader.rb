@@ -81,6 +81,18 @@ class TestEntry < Test::Unit::TestCase
     def test_default_strategy
         @reader.read(@entry, "first;second")
         assert_equal "first", @entry.a
-        assert_equal "second", @entry.b   
+        assert_equal "second", @entry.b
+    end
+    
+    def test_process_attributes_callback
+        @reader.read(@entry, "first;2") do |attribute, value|
+            return case attribute
+            when :first then value.upcase
+            when :second then value.to_i
+            end
+        end
+
+        assert_equal "FIRST", @entry.a
+        assert_equal 2, @entry.b
     end
 end
